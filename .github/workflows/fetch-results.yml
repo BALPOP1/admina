@@ -1,0 +1,59 @@
+name: Fetch Quina Results
+
+on:
+  # Run every day at 20:30 BRT (approx. 23:30 UTC)
+  schedule:
+    - cron: '30 23 * * *'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+  
+  # Run on push to main (for testing)
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/fetch-results.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-results:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Fetch Quina results
+        run: python scripts/fetch_quina.py
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git diff --quiet data/results.json || echo "changes=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/results.json
+          git commit -m "🎰 Update Quina results - $(date -u +%Y-%m-%d_%H:%M:%S)"
+          git push
+

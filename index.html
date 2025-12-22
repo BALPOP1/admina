@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quina — Resultados</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Resultados | QUINA</h1>
+            <p class="subtitle">Resultado Diários</p>
+            <div class="last-updated">Última atualização: <span id="updateTime">Carregando...</span></div>
+            <button class="refresh-btn" id="refreshBtn">🔄 Atualizar</button>
+        </header>
+
+        <section>
+            <h2>Mis recente</h2>
+            <div id="latestResult"><div class="loading">Carregando...</div></div>
+        </section>
+
+        <section>
+            <h2>Anteriores</h2>
+            <div id="previousResults"><div class="loading">Carregando...</div></div>
+        </section>
+
+        <footer>
+            <p>Atualiza automaticamente a cada 5 minutos</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
